@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   HttpException,
   Injectable,
@@ -10,6 +11,7 @@ import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
 import bcrypt from 'bcrypt';
 import { ResetPasswordDTO } from './dto/reset-password.dto';
+import { Prisma } from 'generated/prisma/client';
 
 @Injectable()
 export class UsersService {
@@ -63,21 +65,32 @@ export class UsersService {
     try {
       const { email, phone, password } = body;
 
-      const existEmail = await this.prisma.user.findUnique({
-        where: { email },
-      });
-      const existPhone = await this.prisma.user.findUnique({
-        where: { phone },
+      if (!email && !phone) {
+        throw new BadRequestException(
+          'Vous devez fournir soit un email, soit un numéro de téléphone.',
+        );
+      }
+      const orConditions: Prisma.UserWhereInput[] = [];
+
+      if (email) orConditions.push({ email });
+      if (phone) orConditions.push({ phone });
+
+      const where: Prisma.UserWhereInput = { OR: orConditions };
+
+      const existingUser = await this.prisma.user.findFirst({
+        where,
       });
 
-      if (existEmail)
-        throw new ConflictException(
-          'Cet email est déjà associé à un autre compte',
-        );
-      if (existPhone)
-        throw new ConflictException(
-          'Ce numero de téléphone est déjà associé à un autre utilisateur',
-        );
+      if (existingUser) {
+        if (email && existingUser.email === email) {
+          throw new ConflictException('Cet email est déjà utilisé.');
+        }
+        if (phone && existingUser.phone === phone) {
+          throw new ConflictException(
+            'Ce numéro de téléphone est déjà utilisé.',
+          );
+        }
+      }
 
       const hashPassword = await bcrypt.hash(password, 10);
       const newUser = await this.prisma.user.create({

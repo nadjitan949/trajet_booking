@@ -30,6 +30,7 @@ export class UsersService {
 
       return data;
     } catch (error) {
+      console.log('Erreur', error);
       if (error instanceof HttpException) throw error;
       throw new InternalServerErrorException(
         `Erreur interne survenus: ${error}`,
@@ -50,6 +51,7 @@ export class UsersService {
 
       return data;
     } catch (error) {
+      console.log('Erreur', error);
       if (error instanceof HttpException) throw error;
       throw new InternalServerErrorException(
         `Erreur interne survenus: ${error}`,
@@ -90,6 +92,7 @@ export class UsersService {
 
       return data;
     } catch (error) {
+      console.log('Erreur', error);
       if (error instanceof HttpException) throw error;
       throw new InternalServerErrorException(
         `Erreur interne survenus: ${error}`,
@@ -115,6 +118,7 @@ export class UsersService {
 
       return data;
     } catch (error) {
+      console.log('Erreur', error);
       if (error instanceof HttpException) throw error;
       throw new InternalServerErrorException(
         `Erreur interne survenus: ${error}`,
@@ -136,6 +140,7 @@ export class UsersService {
 
       return data;
     } catch (error) {
+      console.log('Erreur', error);
       if (error instanceof HttpException) throw error;
       throw new InternalServerErrorException(
         `Erreur interne survenus: ${error}`,
@@ -164,6 +169,7 @@ export class UsersService {
 
       return data;
     } catch (error) {
+      console.log('Erreur', error);
       if (error instanceof HttpException) throw error;
       throw new InternalServerErrorException(
         `Erreur interne survenus: ${error}`,

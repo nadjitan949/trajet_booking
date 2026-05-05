@@ -13,6 +13,12 @@ datasource db {
   provider = "postgresql"
 }
 
+enum OtpSources {
+  SIGNUP
+  FORTGOT_PASSWORD
+  RESET_PASSWORD
+}
+
 model User {
   id        Int      @id @unique @default(autoincrement())
   firstname String
@@ -24,4 +30,13 @@ model User {
   updatedAt DateTime @updatedAt
 
   @@map("users")
+}
+
+model Otp {
+  id Int @id @default(autoincrement()) @unique
+  source OtpSources
+  user String @unique
+  code String
+
+  @@map("otps")
 }

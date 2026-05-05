@@ -81,8 +81,8 @@ export class AuthService {
 
             const data = {
                 success: true,
-                message: "Votre compte a été crée avec succes",
-                newUser
+                message: "Votre compte a été crée avec succes." + email ? " Un code à 6 chiffres a été envoyé sur votre mail" : " Un code à 6 chiffre a été envoyé à votre numéro de téléphone",
+                newUser,
             }
 
             return data

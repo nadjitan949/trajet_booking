@@ -70,6 +70,33 @@ export class OtpService {
         await this.prisma.otp.deleteMany({ where: { user: email || phone } });
 
         return data;
+      } else if (otp.source === OtpSources.FORTGOT_PASSWORD) {
+        const user = await this.prisma.user.findFirst({
+          where: {
+            OR: [{ email: email }, { phone: phone }],
+          },
+        });
+
+        if (!user)
+          throw new NotAcceptableException(
+            email
+              ? 'Aucun compte trouvé avec cet email'
+              : 'Aucun compte trouvé avec ce numéro de téléphone',
+          );
+        const hashPassword = await bcrypt.hash(body.newPassword!, 10);
+
+        const updatedePassword = await this.prisma.user.update({
+          where: { id: user.id },
+          data: { password: hashPassword },
+        });
+
+        const data = {
+          success: true,
+          message: 'Votre mot de passe a été réinitialisé',
+          updatedePassword,
+        };
+
+        return data;
       }
     } catch (error) {
       console.log('Erreur', error);

@@ -32,4 +32,11 @@ export class ValidateOtpDTO {
     message: 'Le mot de passe doit contenir au moins 8 caractères',
   })
   password?: string;
+
+  @IsString()
+  @IsOptional()
+  @MinLength(8, {
+    message: 'Le nouveau mot de passe doit contenir au moins 8 caractères',
+  })
+  newPassword?: string;
 }
